@@ -26,6 +26,7 @@ TARGET_FILES := $(patsubst %.cpp,%,$(CPP_FILES))
 
 CXXFLAGS := $(CXXFLAGS) -Wall -std=c++0x
 INCLUDES := $(INCLUDES) -I..
+LIBS     := -lpthread
 
 .PHONY: all clean
 
@@ -34,8 +35,8 @@ all: $(TARGET_FILES)
 clean:
 	$(RM) $(TARGET_FILES)
 
-% : %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MD -MF $*.d $< -o $@
+%: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -MD -MF $*.d $< -o $@ $(LIBS)
 
 # include depends files
 -include $(CPP_FILES:.cpp=.d))
