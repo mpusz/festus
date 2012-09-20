@@ -25,12 +25,13 @@
 #include <future>
 #include <iostream>
 #include <vector>
+#include <string>
 
 
 int main()
 {
   {
-    monitor<std::string> s{"start\n"};
+    monitor<std::string> s("start\n");
     std::vector<std::future<void>> v;
 
     for(int i=0; i<5; i++)
@@ -51,7 +52,7 @@ int main()
   std::cout << "\n---------------------------------------\n\n";
 
   {
-    monitor<std::ostream &> sync_cout{std::cout};
+    monitor<std::ostream &> sync_cout(std::cout);
     std::vector<std::future<void> > v;
     for(int i=0; i<5; i++)
       v.push_back(std::async(std::launch::async, [&,i]{
@@ -65,6 +66,6 @@ int main()
           }));
     for(auto &f : v)
       f.wait();
-    sync_cout([](std::ostream &cout){ std::cout << "Done\n"; });
+    sync_cout([](std::ostream &cout){ cout << "Done\n"; });
   }
 }

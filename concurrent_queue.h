@@ -23,6 +23,7 @@
 
 #include <queue>
 #include <thread>
+#include <condition_variable>
 
 
 template<typename T>
@@ -33,7 +34,7 @@ class concurrent_queue {
 public:
   void push(T &&msg)
   {
-    std::lock_guard<std::mutex> lock{_mutex};
+    std::lock_guard<std::mutex> lock(_mutex);
     const bool wasEmpty = _queue.empty();
     _queue.emplace(std::move(msg));
     if(wasEmpty)
@@ -41,7 +42,7 @@ public:
   }
   T pop()
   {
-    std::unique_lock<std::mutex> lock{_mutex};
+    std::unique_lock<std::mutex> lock(_mutex);
     _newItemReady.wait(lock, [&]{ return !_queue.empty(); });
     T msg = std::move(_queue.front());
     _queue.pop();

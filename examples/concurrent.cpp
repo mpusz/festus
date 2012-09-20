@@ -24,6 +24,7 @@
 #include "concurrent.h"
 #include <iostream>
 #include <vector>
+#include <string>
 
 
 int main()
@@ -50,7 +51,7 @@ int main()
   std::cout << "\n---------------------------------------\n\n";
   
   {
-    concurrent<std::ostream &> async_cout{std::cout};
+    concurrent<std::ostream &> async_cout(std::cout);
     std::vector<std::future<void> > v;
     for(int i=0; i<5; i++)
       v.push_back(std::async(std::launch::async, [&,i]{
@@ -64,6 +65,6 @@ int main()
           }));
     for(auto &f : v)
       f.wait();
-    async_cout([](std::ostream &cout){ std::cout << "Done\n"; });
+    async_cout([](std::ostream &cout){ cout << "Done\n"; });
   }
 }

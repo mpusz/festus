@@ -27,42 +27,65 @@
 
 template<class T>
 class expected {
+#ifndef _MSC_VER
   union {
+#endif
     T _t;
     std::exception_ptr _ex;
+#ifndef _MSC_VER
   };
+#endif
   bool _isT;
 public:
-  expected(const T &t): _t{t}, _isT{true} {}
+  expected(const T &t): _t(t), _isT(true) {}
 
-  expected(T &&t): _t{std::move(t)}, _isT{true} {}
+  expected(T &&t): _t(std::move(t)), _isT(true) {}
 
   template<class E>
   expected(const E &e,
            typename std::enable_if<std::is_base_of<std::exception,E>::value,
-                                   void*>::type = 0): _isT{false}
-  { new(&_ex) std::exception_ptr(std::make_exception_ptr(e)); }
-  
-  expected(const expected &rhs): _isT{rhs.gotT}
+                                   void*>::type = 0): _isT(false)
   {
-    if(_isT) new(&_t) T(rhs._t);
-    else new(&_ex) std::exception_ptr(rhs._ex);
+#ifndef _MSC_VER
+    new(&_ex) std::exception_ptr(std::make_exception_ptr(e));
+#else
+    _ex = std::make_exception_ptr(e);
+#endif
   }
   
-  expected(expected &&rhs): _isT{std::move(rhs._isT)}
+  expected(const expected &rhs): _isT(rhs.gotT)
   {
+#ifndef _MSC_VER
+    if(_isT) new(&_t) T(rhs._t);
+    else new(&_ex) std::exception_ptr(rhs._ex);
+#else
+    _t = rhs._t;
+    _ex = rhs._ex;
+#endif
+  }
+  
+  expected(expected &&rhs): _isT(std::move(rhs._isT))
+  {
+#ifndef _MSC_VER
     if(_isT) new(&_t) T(std::move(rhs._t));
     else new(&_ex) std::exception_ptr(std::move(rhs._ex));
+#else
+    _t = std::move(rhs._t);
+    _ex = std::move(rhs._ex);
+#endif
   }
 
   ~expected()
   {
+#ifndef _MSC_VER
     if(_isT) _t.~T();
     else _ex.~exception_ptr();
+#endif
   }
 
   void swap(expected &rhs)
   {
+#ifndef _MSC_VER
     if(_isT) {
       if(rhs._isT) {
         using std::swap;
@@ -84,6 +107,12 @@ public:
         std::swap(_isT, rhs._isT);
       }
     }
+#else
+    using std::swap;
+    swap(_isT, rhs._isT);
+    swap(_t, rhs._t);
+    swap(_ex, rhs._ex);
+#endif
   }
   
   bool valid() const { return _isT; }
@@ -106,7 +135,7 @@ public:
     try {
       if(!_isT) std::rethrow_exception(_ex);
     }
-    catch(const E &object) {
+    catch(const E &) {
       return true;
     }
     catch (...) {

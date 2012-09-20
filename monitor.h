@@ -33,7 +33,7 @@ public:
   template<typename F>
   auto operator()(F f) const -> decltype(f(_t))
   {
-    std::lock_guard<std::mutex> lck{_m};
+    std::lock_guard<std::mutex> lck(_m);
     return f(_t);
   }
 };

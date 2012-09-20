@@ -27,15 +27,15 @@ template<class Fun>
 class scope_guard {
   Fun _f;
   bool _active;
+
+  scope_guard(const scope_guard &);            // disallowed
+  scope_guard &operator=(const scope_guard &); // disallowed;
 public:
-  scope_guard(Fun f): _f{std::move(f)}, _active{true} {}
-  scope_guard() = delete;
-  scope_guard(const scope_guard &) = delete;
+  scope_guard(Fun f): _f(std::move(f)), _active(true) {}
   scope_guard(scope_guard &&rhs):
     _f(std::move(rhs._f)), _active(rhs._active)
   { rhs.dismiss(); }
   ~scope_guard() { if(_active) _f(); }
-  scope_guard &operator=(const scope_guard &) = delete;
   void dismiss() { _active = false; }
 };
 

@@ -39,7 +39,7 @@ expected<int> parseInt(const std::string &s)
 }
 
 
-int testExceptions(const std::string &argument)
+int testExceptions()
 {
   try {
     std::cout << "Provide an integer to parse (or 'nan' or 'overflow'): ";
@@ -60,7 +60,7 @@ int testExceptions(const std::string &argument)
 }
 
 
-int testErrors(const std::string &argument)
+int testErrors()
 {
   std::cout << "Provide an integer to parse (or 'nan' or 'overflow'): ";
   std::string s;
@@ -94,9 +94,9 @@ int main(int argc, const char *argv[])
   if(argc == 2) {
     std::string argument(argv[1]);
     if(argument == "exceptions")
-      return testExceptions(argument);
+      return testExceptions();
     else if(argument == "errors")
-      return testErrors(argument);
+      return testErrors();
   }
   else {
     std::cout << "Usage: expected <exceptions|errors>\n";
