@@ -29,7 +29,7 @@
 
 int main()
 {
-  const char text[]("This is cbegin() and cend() test text\n");
+  const char text[] = "This is cbegin() and cend() test text\n";
   std::string string("This is cbegin() and cend() test string\n");
   std::vector<int> ints;
   for(size_t i=0; i<10; i++)
