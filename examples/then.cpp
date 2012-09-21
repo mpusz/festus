@@ -50,8 +50,8 @@ int main()
                          });
   auto f4 = future::then(std::move(f3), [&](int v)
                          {
-                           const int val = v + 5;
-                           sync_cout([=](std::ostream &out){ out << "Task 4 - final result " << v << "+5=" << val << "\n"; });
+                           const int val = v + 9;
+                           sync_cout([=](std::ostream &out){ out << "Task 4 - final result " << v << "+9=" << val << "\n"; });
                          });
   auto f5 = future::then(std::move(f4), [&]
                          {
