@@ -21,8 +21,11 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-CPP_FILES := concurrent.cpp expected.cpp iterator.cpp memory.cpp monitor.cpp scope_guard.cpp
+CPP_FILES := concurrent.cpp expected.cpp iterator.cpp memory.cpp monitor.cpp scope_guard.cpp then.cpp
 TARGET_FILES := $(patsubst %.cpp,%,$(CPP_FILES))
+
+CXX      := /usr/lib/gcc-snapshot/bin/g++
+#CXX      := /opt/clang-dev/bin/clang++
 
 CXXFLAGS := $(CXXFLAGS) -Wall -std=c++0x
 INCLUDES := $(INCLUDES) -I..
