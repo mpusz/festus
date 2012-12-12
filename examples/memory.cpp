@@ -47,6 +47,7 @@ int main()
 {
   try {
     auto pair = std::make_pair(make_unique<X>(50), make_unique<X>(50));
+    auto array = make_unique<X[]>(50, 20);
   }
   catch(const std::exception &ex) {
     std::cout << "Exception: " << ex.what() << std::endl;
