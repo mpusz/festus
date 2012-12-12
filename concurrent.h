@@ -46,7 +46,7 @@ class concurrent {
   std::thread _thd;
 public:
   concurrent(T t=T{}):
-    _t(t), _done(false), _thd([=]{ while(!_done) _q.pop()(); }) {}
+    _t(t), _done(false), _thd([=]{ while(!this->_done) _q.pop()(); }) {}
   ~concurrent()
   { _q.push([=]{ _done = true; }); _thd.join(); }
   template<typename F>
