@@ -92,19 +92,20 @@ public:
         swap(_t, rhs._t);
       }
       else {
-        auto ex = std::move(rhs._ex);
-        new(&rhs._t) T(std::move(_t));
-        new(&_ex) std::exception_ptr(ex);
-        std::swap(_isT, rhs._isT);
+        auto ex = std::move(rhs._ex);       // backup remote exception
+        rhs._ex.~exception_ptr();           // destruct remote exception
+        new(&rhs._t) T(std::move(_t));      // construct in place remote type
+        _t.~T();                            // destruct local type
+        new(&_ex) std::exception_ptr(ex);   // construct in place local exception from backed up value
+        std::swap(_isT, rhs._isT);          // swap flags
       }
     }
     else {
       if(rhs._isT) {
-        rhs.swap(*this);
+        rhs.swap(*this);                    // reuse already written procedure
       }
       else {
         _ex.swap(rhs._ex);
-        std::swap(_isT, rhs._isT);
       }
     }
 #else
