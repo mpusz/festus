@@ -24,10 +24,10 @@
 CPP_FILES := concurrent.cpp expected.cpp iterator.cpp memory.cpp monitor.cpp scope_guard.cpp then.cpp
 TARGET_FILES := $(patsubst %.cpp,%,$(CPP_FILES))
 
-CXX      := /usr/lib/gcc-snapshot/bin/g++
+#CXX      := /usr/lib/gcc-snapshot/bin/g++
 #CXX      := /opt/clang-dev/bin/clang++
 
-CXXFLAGS := $(CXXFLAGS) -Wall -std=c++0x
+CXXFLAGS := $(CXXFLAGS) -Wall -std=c++11
 INCLUDES := $(INCLUDES) -I..
 LIBS     := -lpthread
 
