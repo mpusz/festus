@@ -11,7 +11,7 @@
 #
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 # MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,25 +21,24 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-CPP_FILES := concurrent.cpp expected.cpp iterator.cpp memory.cpp monitor.cpp scope_guard.cpp then.cpp
-TARGET_FILES := $(patsubst %.cpp,%,$(CPP_FILES))
+project(festus-examples)
+cmake_minimum_required(VERSION 2.8)
+add_definitions(-std=c++11 -Wall)
+include_directories(..)
 
-#CXX      := /usr/lib/gcc-snapshot/bin/g++
-#CXX      := /opt/clang-dev/bin/clang++
+add_executable(example_concurrent concurrent.cpp)
+target_link_libraries(example_concurrent pthread)
 
-CXXFLAGS := $(CXXFLAGS) -Wall -std=c++11
-INCLUDES := $(INCLUDES) -I..
-LIBS     := -lpthread
+add_executable(example_expected expected.cpp)
 
-.PHONY: all clean
+add_executable(example_iterator iterator.cpp)
 
-all: $(TARGET_FILES)
+add_executable(example_memory memory.cpp)
 
-clean:
-	$(RM) $(TARGET_FILES)
+add_executable(example_monitor monitor.cpp)
+target_link_libraries(example_concurrent pthread)
 
-%: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MD -MF $*.d $< -o $@ $(LIBS)
+add_executable(example_scope_guard scope_guard.cpp)
 
-# include depends files
--include $(CPP_FILES:.cpp=.d))
+add_executable(example_then then.cpp)
+target_link_libraries(example_concurrent pthread)
